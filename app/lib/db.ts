@@ -1,22 +1,22 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client";
+import { PrismaClient } from "@prisma/client/extension";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
 });
 
-const prismaClientSingLeton = () => {
+const prismaClientSingleton = () => {
   return new PrismaClient({ adapter });
 };
 
-declare const globalThis: {
-  prismaGlobal: ReturnType<typeof prismaClientSingLeton>;
-} & typeof global;
+declare global {
+  var prismaGlobal: PrismaClient | undefined;
+}
 
-const prisma = globalThis.prismaGlobal ?? prismaClientSingLeton();
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 
-if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;
+if (process.env.NODE_ENV !== "production") {
+  globalThis.prismaGlobal = prisma;
+}
 
 export default prisma;
-
-export * from "../generated/prisma/client";
