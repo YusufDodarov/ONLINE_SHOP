@@ -1,0 +1,2 @@
+git remote set-url origin https://github.com/YusufDodarov/ONLINE_SHOP.git
+ git push -u origin main
